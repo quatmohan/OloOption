@@ -55,6 +55,7 @@ class Trade:
     quantity: int
     pnl: float
     exit_reason: str  # "TARGET", "STOP_LOSS", "TIME_BASED", "FORCE_CLOSE", "DAILY_LIMIT"
+    date: str = ""  # Trading date
 
 
 @dataclass
@@ -134,3 +135,7 @@ class TradingSetup(ABC):
     def should_force_close(self, current_timeindex: int) -> bool:
         """Check if time-based close needed"""
         return current_timeindex >= self.close_timeindex
+    
+    def reset_daily_state(self):
+        """Reset daily state for new trading day - override in subclasses if needed"""
+        pass

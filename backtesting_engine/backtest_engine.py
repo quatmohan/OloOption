@@ -55,6 +55,10 @@ class BacktestEngine:
         self.position_manager.reset_positions()
         self.risk_manager.reset_daily_tracking()
         
+        # Reset daily state for all setups
+        for setup in self.setups:
+            setup.reset_daily_state()
+        
         daily_trades = []
         positions_forced_closed = 0
         
@@ -82,13 +86,13 @@ class BacktestEngine:
             )
             
             # Process this time interval
-            interval_trades = self.process_time_interval(market_data)
+            interval_trades = self.process_time_interval(market_data, date)
             daily_trades.extend(interval_trades)
             
             # Check daily risk limits
             if self.check_daily_risk_limits():
                 print(f"Daily risk limit hit at timestamp {timestamp}. Closing all positions.")
-                emergency_trades = self.position_manager.close_all_positions(market_data, "DAILY_LIMIT")
+                emergency_trades = self.position_manager.close_all_positions(market_data, "DAILY_LIMIT", date)
                 daily_trades.extend(emergency_trades)
                 break
             
@@ -96,7 +100,7 @@ class BacktestEngine:
             if timestamp >= trading_day_data.job_end_idx:
                 print(f"Reached job end index {trading_day_data.job_end_idx}. Force closing positions.")
                 job_end_trades = self.position_manager.force_close_at_job_end(
-                    trading_day_data.job_end_idx, market_data)
+                    trading_day_data.job_end_idx, market_data, date)
                 daily_trades.extend(job_end_trades)
                 positions_forced_closed = len(job_end_trades)
                 break
@@ -121,7 +125,7 @@ class BacktestEngine:
             setup_pnls=setup_pnls
         )
     
-    def process_time_interval(self, market_data: MarketData) -> List[Trade]:
+    def process_time_interval(self, market_data: MarketData, date: str = "") -> List[Trade]:
         """Process a single 5-second interval"""
         interval_trades = []
         
@@ -132,14 +136,11 @@ class BacktestEngine:
                 new_positions = setup.create_positions(market_data)
                 for position in new_positions:
                     position_id = self.position_manager.add_position(position)
-                    print(f"Opened position {position_id} for setup {setup.setup_id} at timestamp {market_data.timestamp}")
-                    print(f"  Spot Price: {market_data.spot_price:.2f}")
-                    print(f"  Selected Strikes: {position.strikes}")
-                    print(f"  Entry Prices: {position.entry_prices}")
-                    print(f"  Target P&L: ${position.target_pnl:.2f}, Stop Loss: ${position.stop_loss_pnl:.2f}")
+                    # Reduced logging - only show key info
+                    print(f"📈 {setup.setup_id}: Opened at {market_data.timestamp}, Spot={market_data.spot_price:.2f}, Strikes={position.strikes}")
         
         # 3. Update P&L for existing positions and check exit conditions
-        closed_trades = self.position_manager.update_positions(market_data)
+        closed_trades = self.position_manager.update_positions(market_data, date)
         interval_trades.extend(closed_trades)
         
         # 4. Check time-based closures

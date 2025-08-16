@@ -20,7 +20,7 @@ class PositionManager:
         self.positions[position_id] = position
         return position_id
     
-    def update_positions(self, market_data: MarketData) -> List[Trade]:
+    def update_positions(self, market_data: MarketData, date: str = "") -> List[Trade]:
         """Update all positions and return closed positions as trades"""
         closed_trades = []
         positions_to_remove = []
@@ -34,7 +34,7 @@ class PositionManager:
             exit_reason = self._check_exit_conditions(position, market_data.timestamp)
             
             if exit_reason:
-                trade = self._close_position(position, market_data, exit_reason)
+                trade = self._close_position(position, market_data, exit_reason, date)
                 closed_trades.append(trade)
                 positions_to_remove.append(position_id)
         
@@ -83,25 +83,25 @@ class PositionManager:
         return sum(position.current_pnl for position in self.positions.values() 
                   if position.setup_id == setup_id)
     
-    def close_all_positions(self, market_data: MarketData, reason: str = "FORCE_CLOSE") -> List[Trade]:
+    def close_all_positions(self, market_data: MarketData, reason: str = "FORCE_CLOSE", date: str = "") -> List[Trade]:
         """Close all open positions"""
         closed_trades = []
         
         for position in self.positions.values():
-            trade = self._close_position(position, market_data, reason)
+            trade = self._close_position(position, market_data, reason, date)
             closed_trades.append(trade)
         
         self.positions.clear()
         return closed_trades
     
-    def close_setup_positions(self, setup_id: str, market_data: MarketData, reason: str = "SETUP_CLOSE") -> List[Trade]:
+    def close_setup_positions(self, setup_id: str, market_data: MarketData, reason: str = "SETUP_CLOSE", date: str = "") -> List[Trade]:
         """Close all positions for a specific setup"""
         closed_trades = []
         positions_to_remove = []
         
         for position_id, position in self.positions.items():
             if position.setup_id == setup_id:
-                trade = self._close_position(position, market_data, reason)
+                trade = self._close_position(position, market_data, reason, date)
                 closed_trades.append(trade)
                 positions_to_remove.append(position_id)
         
@@ -111,9 +111,9 @@ class PositionManager:
         
         return closed_trades
     
-    def force_close_at_job_end(self, job_end_idx: int, market_data: MarketData) -> List[Trade]:
+    def force_close_at_job_end(self, job_end_idx: int, market_data: MarketData, date: str = "") -> List[Trade]:
         """Force close all positions at job end index"""
-        return self.close_all_positions(market_data, "JOB_END")
+        return self.close_all_positions(market_data, "JOB_END", date)
     
     def reset_positions(self):
         """Clear all positions for new trading day"""
@@ -125,9 +125,17 @@ class PositionManager:
         total_pnl = 0.0
         
         for option_key, entry_price in position.entry_prices.items():
-            # Parse option key (e.g., "CE_580.0")
-            option_type, strike_str = option_key.split('_')
-            strike = float(strike_str)
+            # Parse option key - handle both formats:
+            # Simple: "CE_580.0" or Hedged: "CE_580.0_SELL"
+            parts = option_key.split('_')
+            option_type = parts[0]  # CE or PE
+            strike = float(parts[1])
+            
+            # Determine if this is a SELL or BUY position
+            if len(parts) >= 3:  # Hedged position format
+                leg_type = parts[2]  # SELL or BUY
+            else:  # Simple position format
+                leg_type = position.position_type
             
             # Get current market price
             current_price = 0.0
@@ -135,8 +143,8 @@ class PositionManager:
                 strike in market_data.option_prices[option_type]):
                 current_price = market_data.option_prices[option_type][strike]
             
-            # Calculate P&L based on position type
-            if position.position_type == "SELL":
+            # Calculate P&L based on leg type
+            if leg_type == "SELL":
                 # Selling: P&L = (entry_price - current_price) * quantity * lot_size
                 option_pnl = (entry_price - current_price) * position.quantity * position.lot_size
             else:  # BUY
@@ -145,7 +153,6 @@ class PositionManager:
             
             total_pnl += option_pnl
         
-        # Subtract exit slippage (will be applied when position is closed)
         return total_pnl
     
     def _check_exit_conditions(self, position: Position, current_timeindex: int) -> Optional[str]:
@@ -164,14 +171,22 @@ class PositionManager:
         
         return None
     
-    def _close_position(self, position: Position, market_data: MarketData, exit_reason: str) -> Trade:
+    def _close_position(self, position: Position, market_data: MarketData, exit_reason: str, date: str = "") -> Trade:
         """Close a position and create trade record"""
         exit_prices = {}
         
         # Get exit prices with slippage
         for option_key, entry_price in position.entry_prices.items():
-            option_type, strike_str = option_key.split('_')
-            strike = float(strike_str)
+            # Parse option key - handle both formats
+            parts = option_key.split('_')
+            option_type = parts[0]  # CE or PE
+            strike = float(parts[1])
+            
+            # Determine if this is a SELL or BUY position
+            if len(parts) >= 3:  # Hedged position format
+                leg_type = parts[2]  # SELL or BUY
+            else:  # Simple position format
+                leg_type = position.position_type
             
             # Get current market price
             market_price = 0.0
@@ -179,8 +194,8 @@ class PositionManager:
                 strike in market_data.option_prices[option_type]):
                 market_price = market_data.option_prices[option_type][strike]
             
-            # Apply exit slippage
-            if position.position_type == "SELL":
+            # Apply exit slippage based on leg type
+            if leg_type == "SELL":
                 exit_price = market_price - position.slippage  # Pay slippage to buy back
             else:  # BUY
                 exit_price = market_price + position.slippage  # Pay slippage to sell
@@ -192,7 +207,14 @@ class PositionManager:
         for option_key, entry_price in position.entry_prices.items():
             exit_price = exit_prices[option_key]
             
-            if position.position_type == "SELL":
+            # Parse leg type again for P&L calculation
+            parts = option_key.split('_')
+            if len(parts) >= 3:
+                leg_type = parts[2]
+            else:
+                leg_type = position.position_type
+            
+            if leg_type == "SELL":
                 option_pnl = (entry_price - exit_price) * position.quantity * position.lot_size
             else:  # BUY
                 option_pnl = (exit_price - entry_price) * position.quantity * position.lot_size
@@ -208,5 +230,6 @@ class PositionManager:
             strikes=position.strikes,
             quantity=position.quantity,
             pnl=final_pnl,
-            exit_reason=exit_reason
+            exit_reason=exit_reason,
+            date=date
         )
