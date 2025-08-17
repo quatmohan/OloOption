@@ -7,6 +7,7 @@ import os
 from datetime import datetime
 from typing import Dict, List
 from .models import BacktestResults, Trade, DailyResults, SetupResults
+from .html_reporter import HTMLReporter
 
 
 class BacktestReporter:
@@ -40,11 +41,16 @@ class BacktestReporter:
         with open(summary_file, 'w') as f:
             f.write(summary)
         
+        # Generate HTML report
+        html_reporter = HTMLReporter(self.results)
+        html_file = html_reporter.generate_html_report(symbol, start_date, end_date)
+        
         print(f"\n📊 Reports saved to {self.report_dir}/ directory:")
         print(f"   - {report_prefix}_summary.txt")
         print(f"   - {report_prefix}_trades.csv")
         print(f"   - {report_prefix}_daily.csv")
         print(f"   - {report_prefix}_setups.csv")
+        print(f"   - {os.path.basename(html_file)} (HTML Report)")
         
         return summary
     

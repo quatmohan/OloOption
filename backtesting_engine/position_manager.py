@@ -121,7 +121,7 @@ class PositionManager:
         self.position_counter = 0
     
     def _calculate_position_pnl(self, position: Position, market_data: MarketData) -> float:
-        """Calculate current P&L for a position"""
+        """Calculate current P&L for a position with slippage applied"""
         total_pnl = 0.0
         
         for option_key, entry_price in position.entry_prices.items():
@@ -143,13 +143,17 @@ class PositionManager:
                 strike in market_data.option_prices[option_type]):
                 current_price = market_data.option_prices[option_type][strike]
             
-            # Calculate P&L based on leg type
+            # Apply slippage to prices for P&L calculation
             if leg_type == "SELL":
-                # Selling: P&L = (entry_price - current_price) * quantity * lot_size
-                option_pnl = (entry_price - current_price) * position.quantity * position.lot_size
+                # When selling: receive less on entry, pay more on exit
+                effective_entry = entry_price - position.slippage
+                effective_exit = current_price + position.slippage
+                option_pnl = (effective_entry - effective_exit) * position.quantity * position.lot_size
             else:  # BUY
-                # Buying: P&L = (current_price - entry_price) * quantity * lot_size
-                option_pnl = (current_price - entry_price) * position.quantity * position.lot_size
+                # When buying: pay more on entry, receive less on exit
+                effective_entry = entry_price + position.slippage
+                effective_exit = current_price - position.slippage
+                option_pnl = (effective_exit - effective_entry) * position.quantity * position.lot_size
             
             total_pnl += option_pnl
         
@@ -175,18 +179,12 @@ class PositionManager:
         """Close a position and create trade record"""
         exit_prices = {}
         
-        # Get exit prices with slippage
+        # Get exit prices (original market prices, slippage applied in P&L calculation)
         for option_key, entry_price in position.entry_prices.items():
             # Parse option key - handle both formats
             parts = option_key.split('_')
             option_type = parts[0]  # CE or PE
             strike = float(parts[1])
-            
-            # Determine if this is a SELL or BUY position
-            if len(parts) >= 3:  # Hedged position format
-                leg_type = parts[2]  # SELL or BUY
-            else:  # Simple position format
-                leg_type = position.position_type
             
             # Get current market price
             market_price = 0.0
@@ -194,30 +192,32 @@ class PositionManager:
                 strike in market_data.option_prices[option_type]):
                 market_price = market_data.option_prices[option_type][strike]
             
-            # Apply exit slippage based on leg type
-            if leg_type == "SELL":
-                exit_price = market_price - position.slippage  # Pay slippage to buy back
-            else:  # BUY
-                exit_price = market_price + position.slippage  # Pay slippage to sell
-            
-            exit_prices[option_key] = exit_price
+            # Store original market price (slippage applied in P&L calculation)
+            exit_prices[option_key] = market_price
         
-        # Calculate final P&L with exit slippage
+        # Calculate final P&L with slippage applied
         final_pnl = 0.0
         for option_key, entry_price in position.entry_prices.items():
             exit_price = exit_prices[option_key]
             
-            # Parse leg type again for P&L calculation
+            # Parse leg type for P&L calculation
             parts = option_key.split('_')
             if len(parts) >= 3:
                 leg_type = parts[2]
             else:
                 leg_type = position.position_type
             
+            # Apply slippage to P&L calculation
             if leg_type == "SELL":
-                option_pnl = (entry_price - exit_price) * position.quantity * position.lot_size
+                # When selling: receive less on entry, pay more on exit
+                effective_entry = entry_price - position.slippage
+                effective_exit = exit_price + position.slippage
+                option_pnl = (effective_entry - effective_exit) * position.quantity * position.lot_size
             else:  # BUY
-                option_pnl = (exit_price - entry_price) * position.quantity * position.lot_size
+                # When buying: pay more on entry, receive less on exit
+                effective_entry = entry_price + position.slippage
+                effective_exit = exit_price - position.slippage
+                option_pnl = (effective_exit - effective_entry) * position.quantity * position.lot_size
             
             final_pnl += option_pnl
         

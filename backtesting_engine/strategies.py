@@ -100,12 +100,9 @@ class StraddleSetup(TradingSetup):
         # Create positions for selected strikes
         for option_type, strike in selected_strikes.items():
             if option_type in market_data.option_prices and strike in market_data.option_prices[option_type]:
-                # Apply slippage to entry price
+                # Store original market price (slippage applied in P&L calculation)
                 market_price = market_data.option_prices[option_type][strike]
-                # For selling, we receive less (market_price - slippage)
-                # For buying, we pay more (market_price + slippage)
-                entry_price = market_price - 0.005  # Default to selling straddle
-                entry_prices[f"{option_type}_{strike}"] = entry_price
+                entry_prices[f"{option_type}_{strike}"] = market_price
         
         if entry_prices:
             position = Position(
@@ -251,13 +248,8 @@ class HedgedStraddleSetup(TradingSetup):
             if option_type in market_data.option_prices and strike in market_data.option_prices[option_type]:
                 market_price = market_data.option_prices[option_type][strike]
                 
-                # Apply slippage based on position type
-                if position_type == "SELL":
-                    entry_price = market_price - 0.005  # Receive less when selling
-                else:  # BUY
-                    entry_price = market_price + 0.005  # Pay more when buying
-                
-                entry_prices[f"{option_type}_{strike}_{position_type}"] = entry_price
+                # Store original market price (slippage applied in P&L calculation)
+                entry_prices[f"{option_type}_{strike}_{position_type}"] = market_price
                 position_strikes[strike_key] = strike
         
         if entry_prices:
@@ -347,8 +339,7 @@ class CEScalpingSetup(TradingSetup):
             strike = selected_strikes["CE"]
             if strike in market_data.option_prices["CE"]:
                 market_price = market_data.option_prices["CE"][strike]
-                entry_price = market_price - 0.005  # Selling CE
-                entry_prices[f"CE_{strike}"] = entry_price
+                entry_prices[f"CE_{strike}"] = market_price  # Store original price
         
         if entry_prices:
             position = Position(
@@ -446,8 +437,7 @@ class PEScalpingSetup(TradingSetup):
             strike = selected_strikes["PE"]
             if strike in market_data.option_prices["PE"]:
                 market_price = market_data.option_prices["PE"][strike]
-                entry_price = market_price - 0.005  # Selling PE
-                entry_prices[f"PE_{strike}"] = entry_price
+                entry_prices[f"PE_{strike}"] = market_price  # Store original price
         
         if entry_prices:
             position = Position(
