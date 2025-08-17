@@ -85,17 +85,84 @@
   - Generate equity curves, daily P&L charts, and setup comparison visualizations
   - _Requirements: 7.1, 7.2, 7.3, 7.4_
 
-- [ ] 13. Add comprehensive testing
-  - Create unit tests for DataLoader with sample 5SecData files
-  - Test strike selection algorithms with various market conditions
-  - Test P&L calculations with different position types and slippage
-  - Test multi-day backtesting with risk management
-  - Test re-entry logic for scalping strategies
+- [x] 13. Extend DataLoader for multi-symbol support
+  - Add support for QQQ, SPY, QQQ 1DTE, and SPY 1DTE data loading
+  - Implement file suffix handling (no suffix, F, B, M) for different symbols
+  - Add symbol-specific spot data parsing (qqq.csv, spy.csv)
+  - Create concurrent and sequential multi-symbol data loading capabilities
+  - _Requirements: 1.1, 1.6, 1.7, 2.5, 2.6_
+
+- [x] 14. Implement market regime detection system
+  - Create MarketRegimeDetector class for real-time market analysis
+  - Implement price velocity and momentum calculation from 5-second data
+  - Add volatility estimation from option price movements
+  - Create trend detection and market classification algorithms
+  - Add time-of-day effect analysis and cross-symbol correlation tracking
+  - _Requirements: 19.1, 19.2, 19.3, 19.6, 20.1_
+
+- [x] 15. Build dynamic setup management system
+  - Create DynamicSetupManager for adaptive parameter adjustment
+  - Implement regime-based parameter modification (target_pct, stop_loss_pct, scalping_price)
+  - Add strategy activation/deactivation based on market conditions
+  - Create performance tracking for dynamic vs static parameters
+  - _Requirements: 20.2, 20.3, 20.4, 20.5, 21.1, 21.2_
+
+- [x] 16. Implement advanced multi-leg option strategies
+  - Create IronCondorSetup with four-leg position management
+  - Implement ButterflySetup with 1-2-1 ratio structure
+  - Add VerticalSpreadSetup for directional strategies (bull/bear call/put spreads)
+  - Create RatioSpreadSetup with configurable ratios and unlimited risk protection
+  - _Requirements: 9.1, 9.2, 9.3, 10.1, 10.2, 11.1, 11.2, 14.1, 14.2_
+
+- [x] 17. Build pattern recognition strategies
+  - Implement MomentumReversalSetup for price velocity-based trading
+  - Create VolatilitySkewSetup for relative IV exploitation
+  - Add TimeDecaySetup optimized for accelerating theta in final trading hours
+  - Implement put-call parity violation detection for arbitrage opportunities
+  - _Requirements: 17.1, 17.2, 17.3, 18.1, 18.2, 15.1, 15.3_
+
+- [x] 18. Implement intraday gamma scalping strategy
+  - Create GammaScalpingSetup with delta-neutral position construction
+  - Add intraday rebalancing logic based on delta thresholds
+  - Implement position ratio adjustments to maintain neutrality
+  - Add gamma P&L tracking separate from theta decay
+  - _Requirements: 12.1, 12.2, 12.3, 12.4_
+
+- [x] 19. Extend PositionManager for complex multi-leg positions
+  - Add support for four-leg positions (iron condors) with mixed buy/sell actions
+  - Implement complex P&L calculations for butterfly and ratio spreads
+  - Add position-specific risk management for unlimited risk strategies
+  - Create coordinated position closure for multi-leg strategies
+  - _Requirements: 9.3, 10.3, 11.3, 14.3, 14.5_
+
+- [x] 20. Update BacktestEngine for multi-symbol and dynamic processing
+  - Add multi-symbol coordination and processing capabilities
+  - Integrate MarketRegimeDetector and DynamicSetupManager
+  - Implement regime-based strategy switching and parameter adjustment
+  - Add cross-symbol correlation monitoring and risk management
+  - _Requirements: 16.1, 16.2, 16.3, 20.6, 21.3, 21.4_
+
+- [x] 21. Enhance reporting system for advanced analytics
+  - Extend BacktestReporter with multi-symbol performance breakdowns
+  - Add regime-specific performance analysis and visualization
+  - Create dynamic adjustment impact tracking and reporting
+  - Implement pattern discovery tools and cross-symbol correlation analysis
+  - Add strategy-specific visualizations for complex multi-leg positions
+  - _Requirements: 22.1, 22.2, 22.3, 22.4, 22.5, 22.6_
+
+- [x] 22. Add comprehensive testing for new functionality
+  - Create unit tests for multi-symbol data loading and processing
+  - Test market regime detection accuracy with historical data
+  - Test dynamic parameter adjustment logic and performance impact
+  - Test complex multi-leg strategy P&L calculations
+  - Test pattern recognition strategy signal generation
+  - Validate cross-symbol correlation and risk management
   - _Requirements: All_
 
-- [x] 14. Create example usage and documentation
-  - Write example scripts showing how to set up and run backtests
-  - Document strike selection strategies and their use cases
-  - Create sample trading setups (straddle, hedged, scalping examples)
-  - Add configuration examples for different testing scenarios
+- [x] 23. Create advanced example usage and documentation
+  - Write examples for multi-symbol backtesting across all data sources
+  - Document advanced strategy configurations and parameter optimization
+  - Create regime-specific strategy examples and dynamic setup configurations
+  - Add pattern recognition strategy examples and market condition analysis
+  - Document cross-symbol analysis and correlation trading strategies
   - _Requirements: All_
