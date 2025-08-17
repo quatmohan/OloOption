@@ -285,13 +285,14 @@ class CEScalpingSetup(TradingSetup):
     
     def check_entry_condition(self, current_timeindex: int) -> bool:
         """Check if entry conditions are met - initial entry or re-entry"""
-        # Initial entry
+        # Initial entry - must be at exact entry timeindex
         if self.entry_count == 0 and current_timeindex == self.entry_timeindex:
             return True
         
-        # Re-entry conditions
-        if (self.entry_count < self.max_reentries and 
-            current_timeindex >= self.last_entry_time + self.reentry_gap and
+        # Re-entry conditions - only after initial entry and after entry timeindex
+        if (self.entry_count > 0 and 
+            self.entry_count < self.max_reentries and 
+            current_timeindex >= max(self.entry_timeindex, self.last_entry_time + self.reentry_gap) and
             current_timeindex <= self.close_timeindex - 100):  # Don't enter too close to close
             return True
         
@@ -383,13 +384,14 @@ class PEScalpingSetup(TradingSetup):
     
     def check_entry_condition(self, current_timeindex: int) -> bool:
         """Check if entry conditions are met - initial entry or re-entry"""
-        # Initial entry
+        # Initial entry - must be at exact entry timeindex
         if self.entry_count == 0 and current_timeindex == self.entry_timeindex:
             return True
         
-        # Re-entry conditions
-        if (self.entry_count < self.max_reentries and 
-            current_timeindex >= self.last_entry_time + self.reentry_gap and
+        # Re-entry conditions - only after initial entry and after entry timeindex
+        if (self.entry_count > 0 and 
+            self.entry_count < self.max_reentries and 
+            current_timeindex >= max(self.entry_timeindex, self.last_entry_time + self.reentry_gap) and
             current_timeindex <= self.close_timeindex - 100):
             return True
         
