@@ -49,7 +49,7 @@
   - Coordinate with PositionManager for mass position closure
   - _Requirements: 5.1, 5.2, 5.3_
 
-- [ ] 8. Build BacktestEngine main orchestrator
+- [x] 8. Build BacktestEngine main orchestrator
   - Implement multi-date file processing (iterate through available dates)
   - Create 5-second interval processing loop
   - Coordinate entry condition checking across all setups
@@ -71,16 +71,31 @@
   - Track positions forced closed at jobEndIdx
   - _Requirements: 4.4_
 
-- [ ] 11. Add comprehensive testing
+- [x] 11. Implement advanced strategy types with re-entry capabilities
+  - Create CEScalpingSetup with re-entry logic and state tracking
+  - Create PEScalpingSetup with configurable re-entry parameters
+  - Implement HedgedStraddleSetup with hedge strike placement
+  - Add daily state reset functionality for all strategies
+  - _Requirements: 5.1, 5.2, 5.3, 6.1, 6.2, 6.3_
+
+- [x] 12. Build comprehensive reporting and analytics system
+  - Implement BacktestReporter with multiple output formats
+  - Create HTMLReporter with interactive charts and visualizations
+  - Add CSV export functionality for trades, daily results, and setup performance
+  - Generate equity curves, daily P&L charts, and setup comparison visualizations
+  - _Requirements: 7.1, 7.2, 7.3, 7.4_
+
+- [ ] 13. Add comprehensive testing
   - Create unit tests for DataLoader with sample 5SecData files
   - Test strike selection algorithms with various market conditions
-  - Test P&L calculations with different position types
+  - Test P&L calculations with different position types and slippage
   - Test multi-day backtesting with risk management
+  - Test re-entry logic for scalping strategies
   - _Requirements: All_
 
-- [ ] 12. Create example usage and documentation
-  - Write example script showing how to set up and run backtests
+- [x] 14. Create example usage and documentation
+  - Write example scripts showing how to set up and run backtests
   - Document strike selection strategies and their use cases
-  - Create sample trading setups (straddle selling examples)
+  - Create sample trading setups (straddle, hedged, scalping examples)
   - Add configuration examples for different testing scenarios
   - _Requirements: All_
