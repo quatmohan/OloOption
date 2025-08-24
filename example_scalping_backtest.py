@@ -25,27 +25,38 @@ def main():
     # Setup 1: CE Scalping with re-entry
     ce_scalping = CEScalpingSetup(
         setup_id="ce_scalping",
-        target_pct=25.0,  # Target profit of $25
-        stop_loss_pct=50.0,  # Stop loss at $50
-        entry_timeindex=1000,  # Initial entry at timeindex 1000
-        close_timeindex=4500,  # Close at timeindex 4500
+        target_pct=60.0,  # Target profit of $25
+        stop_loss_pct=20.0,  # Stop loss at $50
+        entry_timeindex=100,  # Initial entry at timeindex 1000
+        close_timeindex=4100,  # Close at timeindex 4500
         strike_selection="premium",  # Use premium-based selection
-        scalping_price=0.30,  # Minimum premium of 0.30
-        max_reentries=3,  # Allow up to 3 re-entries
-        reentry_gap=500  # Wait 500 timeindex between entries
+        scalping_price=0.60,  # Minimum premium of 0.30
+        max_reentries=25,  # Allow up to 3 re-entries
+        reentry_gap=150  # Wait 500 timeindex between entries
     )
-    
+    pee_scalping = PEScalpingSetup(
+        setup_id="pe_scalping",
+        target_pct=30.0,  # Target profit of $25
+        stop_loss_pct=10.0,  # Stop loss at $50
+        entry_timeindex=100,  # Initial entry at timeindex 1000
+        close_timeindex=4100,  # Close at timeindex 4500
+        strike_selection="premium",  # Use premium-based selection
+        scalping_price=0.60,  # Minimum premium of 0.30
+        max_reentries=25,  # Allow up to 3 re-entries
+        reentry_gap=150  # Wait 500 timeindex between entries
+    )
+
     # Setup 2: PE Scalping with re-entry
     pe_scalping = PEScalpingSetup(
         setup_id="pe_scalping",
         target_pct=30.0,  # Target profit of $30
         stop_loss_pct=60.0,  # Stop loss at $60
-        entry_timeindex=1200,  # Initial entry at timeindex 1200
-        close_timeindex=4400,  # Close at timeindex 4400
+        entry_timeindex=100,  # Initial entry at timeindex 1200
+        close_timeindex=4100,  # Close at timeindex 4400
         strike_selection="distance",  # Use distance-based selection
         strikes_away=1,  # 1 strike away from spot
-        max_reentries=2,  # Allow up to 2 re-entries
-        reentry_gap=600  # Wait 600 timeindex between entries
+        max_reentries=25,  # Allow up to 2 re-entries
+        reentry_gap=200  # Wait 600 timeindex between entries
     )
     
     # Setup 3: CE Scalping with different parameters
@@ -77,14 +88,14 @@ def main():
     # Create backtest engine
     engine = BacktestEngine(
         data_path="5SecData",
-        setups=[ce_scalping, pe_scalping, ce_scalping_2, pe_scalping_2],
+        setups=[ ce_scalping, pee_scalping],
         daily_max_loss=400.0  # Daily max loss of $400 for 4 setups
     )
     
     # Run backtest
     symbol = "QQQ"
     start_date = "2025-08-13"
-    end_date = "2025-08-15"
+    end_date = "2025-08-22"
     
     results = engine.run_backtest(symbol, start_date, end_date)
     

@@ -49,7 +49,7 @@
   - Coordinate with PositionManager for mass position closure
   - _Requirements: 5.1, 5.2, 5.3_
 
-- [ ] 8. Build BacktestEngine main orchestrator
+- [x] 8. Build BacktestEngine main orchestrator
   - Implement multi-date file processing (iterate through available dates)
   - Create 5-second interval processing loop
   - Coordinate entry condition checking across all setups
@@ -71,14 +71,14 @@
   - Track positions forced closed at jobEndIdx
   - _Requirements: 4.4_
 
-- [ ] 11. Add comprehensive testing
+- [x] 11. Add comprehensive testing
   - Create unit tests for DataLoader with sample 5SecData files
   - Test strike selection algorithms with various market conditions
   - Test P&L calculations with different position types
   - Test multi-day backtesting with risk management
   - _Requirements: All_
 
-- [ ] 12. Create example usage and documentation
+- [x] 12. Create example usage and documentation
   - Write example script showing how to set up and run backtests
   - Document strike selection strategies and their use cases
   - Create sample trading setups (straddle selling examples)

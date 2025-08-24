@@ -63,7 +63,7 @@ def main():
     # Run backtest
     symbol = "QQQ"
     start_date = "2025-08-13"
-    end_date = "2025-08-15"
+    end_date = "2025-08-22"
     
     results = engine.run_backtest(symbol, start_date, end_date)
     
