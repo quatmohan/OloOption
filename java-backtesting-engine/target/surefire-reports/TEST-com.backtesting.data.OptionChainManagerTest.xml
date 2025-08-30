@@ -12,7 +12,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="US"/>
     <property name="sun.boot.library.path" value="/opt/homebrew/Cellar/openjdk@17/17.0.15/libexec/openjdk.jdk/Contents/Home/lib"/>
-    <property name="sun.java.command" value="/Users/mohansubramanian/Kiro_Git/OloOption/java-backtesting-engine/target/surefire/surefirebooter-20250824184228774_3.jar /Users/mohansubramanian/Kiro_Git/OloOption/java-backtesting-engine/target/surefire 2025-08-24T18-42-28_747-jvmRun1 surefire-20250824184228774_1tmp surefire_0-20250824184228774_2tmp"/>
+    <property name="sun.java.command" value="/Users/mohansubramanian/Kiro_Git/OloOption/java-backtesting-engine/target/surefire/surefirebooter-20250824210205347_3.jar /Users/mohansubramanian/Kiro_Git/OloOption/java-backtesting-engine/target/surefire 2025-08-24T21-02-05_315-jvmRun1 surefire-20250824210205347_1tmp surefire_0-20250824210205347_2tmp"/>
     <property name="http.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="/Users/mohansubramanian/Kiro_Git/OloOption/java-backtesting-engine/target/test-classes:/Users/mohansubramanian/Kiro_Git/OloOption/java-backtesting-engine/target/classes:/Users/mohansubramanian/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.9.2/junit-jupiter-engine-5.9.2.jar:/Users/mohansubramanian/.m2/repository/org/junit/platform/junit-platform-engine/1.9.2/junit-platform-engine-1.9.2.jar:/Users/mohansubramanian/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/Users/mohansubramanian/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.9.2/junit-jupiter-api-5.9.2.jar:/Users/mohansubramanian/.m2/repository/org/opentest4j/opentest4j/1.2.0/opentest4j-1.2.0.jar:/Users/mohansubramanian/.m2/repository/org/junit/platform/junit-platform-commons/1.9.2/junit-platform-commons-1.9.2.jar:"/>
@@ -28,7 +28,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
-    <property name="surefire.real.class.path" value="/Users/mohansubramanian/Kiro_Git/OloOption/java-backtesting-engine/target/surefire/surefirebooter-20250824184228774_3.jar"/>
+    <property name="surefire.real.class.path" value="/Users/mohansubramanian/Kiro_Git/OloOption/java-backtesting-engine/target/surefire/surefirebooter-20250824210205347_3.jar"/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="java.runtime.version" value="17.0.15+0"/>
@@ -56,17 +56,17 @@
     <property name="socksNonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="java.class.version" value="61.0"/>
   </properties>
-  <testcase name="testGetStrikesInRange" classname="com.backtesting.data.OptionChainManagerTest" time="0.012">
+  <testcase name="testGetStrikesInRange" classname="com.backtesting.data.OptionChainManagerTest" time="0.016">
     <system-out><![CDATA[OptionChainManager: Built indexes for 7 strikes
 OptionChainManager: Loaded 1 timestamps with 7 unique strikes
 ]]></system-out>
   </testcase>
-  <testcase name="testGetAtmStrike" classname="com.backtesting.data.OptionChainManagerTest" time="0.001">
+  <testcase name="testGetAtmStrike" classname="com.backtesting.data.OptionChainManagerTest" time="0.002">
     <system-out><![CDATA[OptionChainManager: Built indexes for 7 strikes
 OptionChainManager: Loaded 1 timestamps with 7 unique strikes
 ]]></system-out>
   </testcase>
-  <testcase name="testGetOtmStrikes" classname="com.backtesting.data.OptionChainManagerTest" time="0.001">
+  <testcase name="testGetOtmStrikes" classname="com.backtesting.data.OptionChainManagerTest" time="0.002">
     <system-out><![CDATA[OptionChainManager: Built indexes for 7 strikes
 OptionChainManager: Loaded 1 timestamps with 7 unique strikes
 ]]></system-out>
@@ -81,7 +81,7 @@ OptionChainManager: Loaded 1 timestamps with 7 unique strikes
 OptionChainManager: Loaded 1 timestamps with 7 unique strikes
 ]]></system-out>
   </testcase>
-  <testcase name="testValidateDataCompleteness" classname="com.backtesting.data.OptionChainManagerTest" time="0.002">
+  <testcase name="testValidateDataCompleteness" classname="com.backtesting.data.OptionChainManagerTest" time="0.001">
     <system-out><![CDATA[OptionChainManager: Built indexes for 7 strikes
 OptionChainManager: Loaded 1 timestamps with 7 unique strikes
 ]]></system-out>
@@ -97,13 +97,13 @@ OptionChainManager: Loaded 1 timestamps with 7 unique strikes
 Cache performance: CacheStats: Hits=9, Misses=1, Hit Rate=90.00%, Strike Cache=1, OTM Cache=1, ITM Cache=1
 ]]></system-out>
   </testcase>
-  <testcase name="testClearCaches" classname="com.backtesting.data.OptionChainManagerTest" time="0">
+  <testcase name="testClearCaches" classname="com.backtesting.data.OptionChainManagerTest" time="0.001">
     <system-out><![CDATA[OptionChainManager: Built indexes for 7 strikes
 OptionChainManager: Loaded 1 timestamps with 7 unique strikes
 OptionChainManager: Cleared all caches
 ]]></system-out>
   </testcase>
-  <testcase name="testGetOptionPrice" classname="com.backtesting.data.OptionChainManagerTest" time="0">
+  <testcase name="testGetOptionPrice" classname="com.backtesting.data.OptionChainManagerTest" time="0.001">
     <system-out><![CDATA[OptionChainManager: Built indexes for 7 strikes
 OptionChainManager: Loaded 1 timestamps with 7 unique strikes
 ]]></system-out>
