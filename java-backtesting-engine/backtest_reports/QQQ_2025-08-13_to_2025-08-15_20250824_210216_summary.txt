@@ -1,0 +1,43 @@
+================================================================================
+OPTIONS BACKTESTING REPORT - QQQ
+Period: 2025-08-13 to 2025-08-15
+Generated: 2025-08-24 21:02:16
+================================================================================
+
+📈 OVERALL PERFORMANCE
+----------------------------------------
+Total P&L:           $     38.00
+Total Trades:                 6
+Win Rate:                  83.3%
+Max Drawdown:        $     87.00
+Average Trade:       $      6.33
+
+📅 DAILY PERFORMANCE
+----------------------------------------
+Date         P&L        Trades   Forced Closes 
+--------------------------------------------
+2025-08-13   $   56.00      2            0
+2025-08-14   $  -71.00      2            0
+2025-08-15   $   53.00      2            0
+
+🎯 SETUP PERFORMANCE
+----------------------------------------
+Setup ID        P&L        Trades   Win Rate   Avg Win    Avg Loss  
+-------------------------------------------------------------------------
+Afternoon_Straddle $   44.00      3    100.0%    $14.67       N/A
+Morning_Straddle $   -6.00      3     66.7%    $40.50   $-87.00
+
+📊 TRADE STATISTICS
+----------------------------------------
+Winning Trades:               5
+Losing Trades:                1
+Average Win:         $     25.00
+Largest Win:         $     41.00
+Average Loss:        $    -87.00
+Largest Loss:        $    -87.00
+
+🚪 EXIT REASON ANALYSIS
+----------------------------------------
+TARGET               2 ( 33.3%)
+STOP_LOSS            1 ( 16.7%)
+TIME_BASED           3 ( 50.0%)
