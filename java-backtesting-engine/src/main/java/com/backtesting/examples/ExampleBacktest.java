@@ -8,88 +8,65 @@ import java.util.*;
 
 /**
  * Example usage of the Java backtesting engine
+ * 
+ * NOTE: All concrete strategies have been removed. 
+ * You'll need to implement your own strategies extending TradingSetup.
  */
 public class ExampleBacktest {
     
     public static void main(String[] args) {
-        // Example 1: Simple straddle setup
-        runSimpleStraddleBacktest();
+        System.out.println("=== Java Backtesting Engine ===");
+        System.out.println("All concrete strategies have been removed.");
+        System.out.println("Please implement your own strategies extending TradingSetup.");
+        System.out.println();
+        System.out.println("Available base class: TradingSetup");
+        System.out.println("Required methods to implement:");
+        System.out.println("- checkEntryCondition(int currentTimeindex)");
+        System.out.println("- selectStrikes(double spotPrice, Map<String, Map<Double, Double>> optionChain)");
+        System.out.println("- createPositions(MarketData marketData)");
         
-        // Example 2: Multiple setups
-        runMultipleSetupsBacktest();
-        
-        // Example 3: All strategies showcase
-        runAllStrategiesBacktest();
-        
-        // Example 4: Option Chain Manager demo
+        // Option Chain Manager demo still works
         System.out.println("\n" + "=".repeat(50));
         OptionChainExample.demonstrateOptionChainManager();
     }
     
     /**
-     * Example 1: Simple straddle selling strategy
+     * Example method showing how to create and run a custom strategy
+     * Uncomment and modify when you have implemented your own strategies
      */
-    public static void runSimpleStraddleBacktest() {
-        System.out.println("=== Simple Straddle Backtest ===");
+    /*
+    public static void runCustomStrategyBacktest() {
+        System.out.println("=== Custom Strategy Backtest ===");
         
-        // Create a straddle setup
-        TradingSetup straddleSetup = new StraddleSetup(
-            "Straddle_930",  // setup ID
-            50.0,            // target P&L
-            -100.0,          // stop loss P&L
-            930              // entry time index (9:30 AM)
+        // Create your custom strategy
+        TradingSetup customSetup = new YourCustomStrategy(
+            "Custom_Strategy",  // setup ID
+            50.0,              // target P&L
+            -100.0,            // stop loss P&L
+            930                // entry time index (9:30 AM)
         );
         
-        List<TradingSetup> setups = Arrays.asList(straddleSetup);
+        List<TradingSetup> setups = Arrays.asList(customSetup);
         
-        // Create backtest engine (path relative to parent directory)
-        BacktestEngine engine = new BacktestEngine("../5SecData", setups, 500.0); // $500 daily max loss
-        
-        // Run backtest
-        BacktestResults results = engine.runBacktest("QQQ", "2025-08-13", "2025-08-22");
-        
-        // Print results
-        printResults(results);
-        
-        // Generate detailed reports
-        BacktestReporter reporter = new BacktestReporter(results);
-        reporter.generateFullReport("QQQ", "2025-08-13", "2025-08-15");
-    }
-    
-    /**
-     * Example 2: Multiple trading setups
-     */
-    public static void runMultipleSetupsBacktest() {
-        System.out.println("\n=== Multiple Setups Backtest ===");
-        
-        // Create multiple setups
-        List<TradingSetup> setups = Arrays.asList(
-            // Morning straddle
-            new StraddleSetup("Morning_Straddle", 40.0, -80.0, 930, 4150, "premium", 0.40, 2),
-            
-            // Afternoon straddle  
-            new StraddleSetup("Afternoon_Straddle", 30.0, -60.0, 2400, 4150, "distance", 0.30, 3)
-        );
-        
-        // Create backtest engine with higher daily limit for multiple setups (path relative to parent directory)
-        BacktestEngine engine = new BacktestEngine("../5SecData", setups, 1000.0);
+        // Create backtest engine
+        BacktestEngine engine = new BacktestEngine("../5SecData", setups, 500.0);
         
         // Run backtest
         BacktestResults results = engine.runBacktest("QQQ", "2025-08-13", "2025-08-15");
         
         // Print results
         printResults(results);
-        printSetupBreakdown(results);
         
         // Generate detailed reports
         BacktestReporter reporter = new BacktestReporter(results);
         reporter.generateFullReport("QQQ", "2025-08-13", "2025-08-15");
     }
+    */
     
     /**
      * Print overall backtest results
      */
-    private static void printResults(BacktestResults results) {
+    public static void printResults(BacktestResults results) {
         System.out.println("\n--- Overall Results ---");
         System.out.printf("Total P&L: $%.2f%n", results.getTotalPnl());
         System.out.printf("Total Trades: %d%n", results.getTotalTrades());
@@ -107,7 +84,7 @@ public class ExampleBacktest {
     /**
      * Print setup-specific performance breakdown
      */
-    private static void printSetupBreakdown(BacktestResults results) {
+    public static void printSetupBreakdown(BacktestResults results) {
         System.out.println("\n--- Setup Performance ---");
         for (Map.Entry<String, SetupResults> entry : results.getSetupPerformance().entrySet()) {
             SetupResults setup = entry.getValue();
@@ -118,42 +95,5 @@ public class ExampleBacktest {
             System.out.printf("  Avg Win: $%.2f%n", setup.getAvgWin());
             System.out.printf("  Avg Loss: $%.2f%n", setup.getAvgLoss());
         }
-    }
-    
-    /**
-     * Example 3: Showcase all available strategies
-     */
-    public static void runAllStrategiesBacktest() {
-        System.out.println("\n=== All Strategies Showcase ===");
-        
-        // Create all available strategies
-        List<TradingSetup> setups = Arrays.asList(
-            // // Basic straddle
-            // new StraddleSetup("Basic_Straddle", 40.0, -80.0, 930),
-            
-            // // Hedged straddle
-            // new HedgedStraddleSetup("Hedged_Straddle", 60.0, -120.0, 1000),
-            
-            // CE scalping with re-entry
-            new CEScalpingSetup("CE_Scalping", 25.0, -50.0, 100)
-            
-            // PE scalping with re-entry
-            // new PEScalpingSetup("PE_Scalping", 25.0, -50.0, 1400)
-        );
-        
-        // Create backtest engine with higher daily limit for multiple strategies
-        BacktestEngine engine = new BacktestEngine("../5SecData", setups, 2000.0);
-        
-        // Run backtest
-        BacktestResults results = engine.runBacktest("QQQ", "2025-08-13", "2025-08-22");
-        
-        // Print results
-        printResults(results);
-        printSetupBreakdown(results);
-        
-        // Generate detailed reports
-        BacktestReporter reporter = new BacktestReporter(results);
-        reporter.generateFullReport("QQQ", "2025-08-13", "2025-08-22");
-        reporter.printQuickSummary();
     }
 }

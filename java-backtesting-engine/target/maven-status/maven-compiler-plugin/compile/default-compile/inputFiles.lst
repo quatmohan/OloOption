@@ -6,15 +6,12 @@
 /Users/mohansubramanian/Kiro_Git/OloOption/java-backtesting-engine/src/main/java/com/backtesting/examples/ExampleBacktest.java
 /Users/mohansubramanian/Kiro_Git/OloOption/java-backtesting-engine/src/main/java/com/backtesting/data/OptionChainManager.java
 /Users/mohansubramanian/Kiro_Git/OloOption/java-backtesting-engine/src/main/java/com/backtesting/models/TradingDayData.java
-/Users/mohansubramanian/Kiro_Git/OloOption/java-backtesting-engine/src/main/java/com/backtesting/strategies/HedgedStraddleSetup.java
 /Users/mohansubramanian/Kiro_Git/OloOption/java-backtesting-engine/src/main/java/com/backtesting/models/Trade.java
 /Users/mohansubramanian/Kiro_Git/OloOption/java-backtesting-engine/src/main/java/com/backtesting/models/MarketData.java
-/Users/mohansubramanian/Kiro_Git/OloOption/java-backtesting-engine/src/main/java/com/backtesting/strategies/CEScalpingSetup.java
 /Users/mohansubramanian/Kiro_Git/OloOption/java-backtesting-engine/src/main/java/com/backtesting/models/BacktestResults.java
-/Users/mohansubramanian/Kiro_Git/OloOption/java-backtesting-engine/src/main/java/com/backtesting/strategies/StraddleSetup.java
 /Users/mohansubramanian/Kiro_Git/OloOption/java-backtesting-engine/src/main/java/com/backtesting/models/DailyResults.java
-/Users/mohansubramanian/Kiro_Git/OloOption/java-backtesting-engine/src/main/java/com/backtesting/strategies/PEScalpingSetup.java
 /Users/mohansubramanian/Kiro_Git/OloOption/java-backtesting-engine/src/main/java/com/backtesting/models/SetupResults.java
 /Users/mohansubramanian/Kiro_Git/OloOption/java-backtesting-engine/src/main/java/com/backtesting/engine/PositionManager.java
 /Users/mohansubramanian/Kiro_Git/OloOption/java-backtesting-engine/src/main/java/com/backtesting/examples/OptionChainExample.java
 /Users/mohansubramanian/Kiro_Git/OloOption/java-backtesting-engine/src/main/java/com/backtesting/reporting/BacktestReporter.java
+/Users/mohansubramanian/Kiro_Git/OloOption/java-backtesting-engine/src/main/java/com/backtesting/strategies/TemplateStrategy.java
